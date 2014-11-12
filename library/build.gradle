@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-
+apply plugin: 'android-bintray-release'
 android {
     compileSdkVersion 21
     buildToolsVersion "20.0.0"
@@ -23,3 +23,15 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.0'
 }
+
+publish {
+    userOrg = 'alazuga'
+    groupId = 'com.alazuga'
+    artifactId = 'arcadioLibrary'
+    version = '0.1'
+    description = 'Arcadio client for Android'
+    website = 'https://github.com/alazuga/arcadioLibrary'
+    issueTracker = "${website}/issues"
+    repository = "${website}.git"
+}
+
