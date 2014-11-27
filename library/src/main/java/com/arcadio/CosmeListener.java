@@ -10,7 +10,6 @@
 package com.arcadio;
 
 import com.arcadio.modelo.Basket;
-import com.arcadio.modelo.CosmeError;
 import com.arcadio.modelo.ItemVariable;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ public interface CosmeListener {
    
     public void notificarEstadoConexion (CosmeStates _estado);
    
-    public void notificarError (CosmeError _error);
+    public void notificarError (String _txtError);
     
    // public void notificarEvento(EstadosCosme _codEvento, Telegrama _tlg);
     public void notificarListaNombres(ArrayList<ItemVariable> listaNombres);

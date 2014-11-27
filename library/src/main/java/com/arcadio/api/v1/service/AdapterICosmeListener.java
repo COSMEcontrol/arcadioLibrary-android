@@ -35,8 +35,8 @@ public class AdapterICosmeListener extends ICosmeListener.Stub {
 	}
 
 	@Override
-	public void notificarError(ParceableCosmeError _error) throws RemoteException {
-		cosmeListener.notificarError(_error);
+	public void notificarError(String _txtError) throws RemoteException {
+		cosmeListener.notificarError(_txtError);
 		
 	}
 

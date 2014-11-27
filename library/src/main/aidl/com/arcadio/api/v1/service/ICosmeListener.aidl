@@ -10,7 +10,7 @@ interface ICosmeListener {
 	
 	void notificarEstadoConexion (inout ParceableCosmeStates _estado);
    
-    void notificarError (inout ParceableCosmeError _error);
+    void notificarError (String _txtError);
     
    // void notificarEvento(EstadosCosme _codEvento, Telegrama _tlg);
    void notificarListaNombres(inout List<ItemVariable> listaNombres);
