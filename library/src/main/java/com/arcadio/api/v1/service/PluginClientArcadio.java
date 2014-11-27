@@ -18,9 +18,9 @@ import java.util.List;
 public class PluginClientArcadio {
 	
 	public static IPluginServiceArcadio remoteArcadio;
-	//listener que notifica el estado de conexion con el servicio
 	private OnClientStartedListener onclientstartedlistener;
-	public static final String NAME_SERVICE_ARCADIO = "com.arcadio.api.v1.service.ArcadioService";
+    public static final String MINIBLAS_PACKAGE_NAME = "com.miniblas.app";
+	public static final String MINIBLAS_SERVICE_ARCADIO = "com.arcadio.api.v1.service.ConnectionArcadioService";
 	//variables de session
 	private int sessionId = 0;
 	private String sessionKey = "";
@@ -30,20 +30,19 @@ public class PluginClientArcadio {
 	public PluginClientArcadio(Context context){
 		this.context=context;
 	}
-	
-	//hacer singelton ??? pensar
+
 	
 	private ServiceConnection conexion = new ServiceConnection() {
 		@Override
 		public void onServiceDisconnected(ComponentName name) {
-			Log.v("onServiceDisconnected", "onServiceDisconnected");
+			Log.v("PluginClientArcadioLibrary-->", "Disconnected to service");
 			remoteArcadio = null;
 			onclientstartedlistener.onClientStopped();
 		}
 		
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder _remoteArcadio) {
-			Log.v("onserviceconected", "onserviceconected");
+			Log.v("PluginClientArcadioLibrary-->", "Connected to service");
 			remoteArcadio =  IPluginServiceArcadio.Stub.asInterface(_remoteArcadio);
 			//generar llamada a onClientStarted
 			onclientstartedlistener.onClientStarted();
@@ -58,17 +57,17 @@ public class PluginClientArcadio {
 		//iniciar la unicion-conexion stub con el servicio de arcadio
 		this.onclientstartedlistener=onclientstartedlistener;
 		Intent msgIntent = new Intent();
-		msgIntent.setClassName("com.miniblas.app", "com.arcadio.api.v1.service.ConnectionArcadioService");
+		msgIntent.setClassName(MINIBLAS_PACKAGE_NAME, MINIBLAS_SERVICE_ARCADIO);
 		if(context.startService(msgIntent)==null)
-			Log.v("no start con el servicio", "no start con el servicio");
+			Log.v("PluginClientArcadioLibrary-->", "Failed to start service");
 		else
-			Log.v("servicio iniciado", "servicio iniciado");      
+			Log.v("PluginClientArcadioLibrary-->", "Iniciate service");
         Intent intent = new Intent();
-        intent.setClassName("com.miniblas.app", "com.arcadio.api.v1.service.ConnectionArcadioService");
+        intent.setClassName(MINIBLAS_PACKAGE_NAME, MINIBLAS_SERVICE_ARCADIO);
 		if(!context.bindService(intent, conexion, Context.BIND_AUTO_CREATE))
-			Log.v("no bind con el servicio", "no bind con el servicio");
+			Log.v("PluginClientArcadioLibrary-->", "ERROR Connecting to an application Arcadio service");
 		else{
-			Log.v("iniciado bind con el servicio", "iniciado bind con el servicio");
+			Log.v("PluginClientArcadioLibrary-->", "Connecting to an application Arcadio service");
 		}	
 	}
 	/**
@@ -76,8 +75,9 @@ public class PluginClientArcadio {
 	 */
 	//requestId es el codigo que acabará devolviendo gotActivityResult
 	public void connect(int connectionId, CosmeListener cosmeListener){
-		if(remoteArcadio== null)
-			Log.v("nulo", "nulo");
+		if(remoteArcadio== null){
+            Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+        }
 		try {
 			
 			remoteArcadio.connect(connectionId, new ISessionStartedListener.Stub() {		
@@ -91,12 +91,12 @@ public class PluginClientArcadio {
 						throws RemoteException {
 					sessionId = _sessionId;
 					sessionKey = _sessionKey;
-					Log.v("PluginClientArcadio->> Recibido identificador cliente API", _sessionId+" y "+ _sessionKey);
+					Log.v("PluginClientArcadioLibrary-->","Client identifier received API");
 				}
 				
 				@Override
 				public void onSessionError(String error) throws RemoteException {
-					Log.v("PluginClientArcadio->> Error onssessionError",error);
+					Log.v("PluginClientArcadioLibrary-->","Session Error: "+error);
 					
 				}
 			}, new AdapterICosmeListener(cosmeListener));
@@ -105,24 +105,13 @@ public class PluginClientArcadio {
 		}
 
 	}
-	/*
-	 * Previously established Arcadio session to the foreground.
-	 * Arcadio no corta la conexion
-	 */
-//	private void attach(){
-//		
-//	}
 
-	
 	public void disconnect(){
-		//desconectar del servidor COSME
 		try {
 			if(remoteArcadio== null)
-				Log.v("nulo", "nulo");
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 			remoteArcadio.disconnect(sessionId, sessionKey);
 		} catch (RemoteException e) {
-			//generar error
-			Log.v("nulo", "nulo");
 			onclientstartedlistener.onClientStopped();	
 		}
 	}

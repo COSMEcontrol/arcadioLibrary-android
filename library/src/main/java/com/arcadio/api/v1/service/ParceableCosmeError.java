@@ -3,7 +3,7 @@ package com.arcadio.api.v1.service;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.arcadio.CosmeError;
+import com.arcadio.modelo.CosmeError;
 
 public class ParceableCosmeError extends CosmeError implements Parcelable{
 	
@@ -16,7 +16,6 @@ public class ParceableCosmeError extends CosmeError implements Parcelable{
 
 	@Override
 	public int describeContents() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

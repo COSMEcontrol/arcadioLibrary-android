@@ -13,7 +13,7 @@ package com.arcadio;
 *
 * @author fserna
 */
-public enum EstadosCosme {
+public enum CosmeStates {
        
    
     // Convenio que seguimos:

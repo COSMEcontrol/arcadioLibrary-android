@@ -29,9 +29,9 @@ public class AdapterICosmeListener extends ICosmeListener.Stub {
 	}
 
 	@Override
-	public void notificarEstadoConexion(ParceableEstadosCosme _estado)
+	public void notificarEstadoConexion(ParceableCosmeStates _estado)
 			throws RemoteException {
-		cosmeListener.notificarEstadoConexion(_estado.getEstado());	
+		cosmeListener.notificarEstadoConexion(_estado.getState());
 	}
 
 	@Override

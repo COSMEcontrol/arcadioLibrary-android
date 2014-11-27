@@ -1,4 +1,4 @@
-package com.arcadio;
+package com.arcadio.modelo;
 
 public class CosmeError extends Exception{
 	/**
