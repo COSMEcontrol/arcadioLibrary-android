@@ -3,10 +3,8 @@ package com.arcadio.api.v1.service;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.arcadio.CosmeStates;
 
-	
-	public class ParceableCosmeStates implements Parcelable{
+public class ParceableCosmeStates implements Parcelable{
 		
 		private CosmeStates state = CosmeStates.DESCONECTADO;
 		

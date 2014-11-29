@@ -9,8 +9,10 @@
  
 package com.arcadio;
 
+import com.arcadio.api.v1.service.CosmeStates;
 import com.arcadio.modelo.Basket;
 import com.arcadio.modelo.ItemVariable;
+import com.arcadio.modelo.VariablesList;
 
 import java.util.ArrayList;
  
@@ -19,9 +21,9 @@ import java.util.ArrayList;
 *
 * @author fserna
 */
-public interface CosmeListener {
+public interface CosmeListener{
    
-    public void notificarRefrescoVariables (String _nombreCesta, ArrayList<ItemVariable> _listaVariables);
+    public void notificarRefrescoVariables (String _nombreCesta, VariablesList _listaVariables);
    
     public void notificarEstadoConexion (CosmeStates _estado);
    

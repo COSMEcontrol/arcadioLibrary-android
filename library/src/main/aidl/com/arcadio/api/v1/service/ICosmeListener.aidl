@@ -3,10 +3,11 @@ import java.util.List;
 import com.arcadio.modelo.ItemVariable;
 import com.arcadio.api.v1.service.ParceableCosmeError;
 import com.arcadio.api.v1.service.ParceableCosmeStates;
+import com.arcadio.modelo.VariablesList;
 
 interface ICosmeListener {
 
-	void notificarRefrescoVariables (String _nombreCesta,inout List<ItemVariable> _listaVariables);
+	void notificarRefrescoVariables (String _nombreCesta,inout VariablesList _listaVariables);
 	
 	void notificarEstadoConexion (inout ParceableCosmeStates _estado);
    

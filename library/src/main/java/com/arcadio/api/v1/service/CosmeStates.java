@@ -7,7 +7,7 @@
 * and open the template in the editor.
 */
  
-package com.arcadio;
+package com.arcadio.api.v1.service;
  
 /**
 *

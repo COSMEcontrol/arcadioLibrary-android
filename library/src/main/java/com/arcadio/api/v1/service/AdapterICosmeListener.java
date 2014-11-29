@@ -5,6 +5,7 @@ import android.os.RemoteException;
 
 import com.arcadio.CosmeListener;
 import com.arcadio.modelo.ItemVariable;
+import com.arcadio.modelo.VariablesList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,8 @@ public class AdapterICosmeListener extends ICosmeListener.Stub {
 
 
 	@Override
-	public void notificarRefrescoVariables(String _nombreCesta,
-			List<ItemVariable> _listaVariables) throws RemoteException {
-		ArrayList<ItemVariable> listavariables = new ArrayList<ItemVariable>();
-		listavariables.addAll(_listaVariables);
-		cosmeListener.notificarRefrescoVariables(_nombreCesta, listavariables);
+	public void notificarRefrescoVariables(String _nombreCesta, VariablesList _listaVariables) throws RemoteException {
+		cosmeListener.notificarRefrescoVariables(_nombreCesta, _listaVariables);
 		
 	}
 
