@@ -28,7 +28,7 @@ publish {
     userOrg = 'alazuga'
     groupId = 'com.alazuga'
     artifactId = 'arcadioLibrary'
-    version = '0.3'
+    version = '0.3.2'
     description = 'Arcadio client for Android'
     website = 'https://github.com/alazuga/arcadioLibrary'
     issueTracker = "${website}/issues"

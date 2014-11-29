@@ -10,85 +10,99 @@ import java.util.Random;
  * deba hacer absolutamente nada.
  * @author Alberto Azuara
  */
-public class Basket {
+public class Basket{
+    public static final String BASKET_NAME_SEPARATOR = "-";
 
-    private String prefijoCesta;   // prefijo de la cesta (sin el sufijo aleatorio
-    private String nombreCesta;    // compuesto por el prefijo más el sufijo aleatorio
-    private Collection<String> listaNombres = new ArrayList();
-    private int refresco;
+    private static Random r = new Random();
 
-    public Basket(String _prefijo, Collection<String> _listaNombres, int _refresco){
-        this.prefijoCesta = _prefijo;
-        //this.nombreCesta  = _nombreAleatorio;
-        this.updateNombreAleatorio();
+    private String basketName;   // prefijo de la cesta (sin el sufijo aleatorio
+    private String realBasketName;    // compuesto por el prefijo más el sufijo aleatorio
+    private Collection<String> nameList = new ArrayList();
 
-        this.listaNombres = _listaNombres;
-        this.refresco = _refresco;
+    private int event_time;
+    private int inhibit_time;
+
+    public Basket (String _name, int event_time, int inhibit_time)
+    {
+        this.basketName = _name;
+
+        //this.realBasketName  = _nombreAleatorio;
+        this.updateRandomName();
+
+        this.event_time = event_time;
+        this.inhibit_time = inhibit_time;
     }
 
-
-    public Basket(String _prefijo, int _refresco){
-        this.prefijoCesta = _prefijo;
-        // this.nombreCesta  = _nombreAleatorio;
-        this.updateNombreAleatorio();
-        this.refresco = _refresco;
-    }
     /**
      * @return the prefijo
      */
-    public String getPrefijo() {
-        return prefijoCesta;
+    public String getBasketName()
+    {
+        return basketName;
+    }
+
+    public String getRealBasketName()
+    {
+        return realBasketName;
     }
 
     /**
-     * @return the nombre
+     * @return the nameList
      */
-    public String getNombreCestaAleatorio() {
-        return nombreCesta;
+    public Collection<String> getNameList()
+    {
+        return nameList;
+    }
+
+    public void setNameList(Collection<String> _listaNombres)
+    {
+        this.nameList = _listaNombres;
+    }
+
+    public void addName(String _name)
+    {
+        nameList.add(_name);
+    }
+
+    public boolean existsName(String _name)
+    {
+        return nameList.contains(_name);
+    }
+
+    public boolean deleteName(String _name)
+    {
+        return nameList.remove(_name);
     }
 
     /**
-     *
+     * @return the event_time
      */
-    public void setNombreCestaAleatorio(String _nuevoNombreCompleto) {
-        nombreCesta = _nuevoNombreCompleto;
+    public int getEventTime()
+    {
+        return event_time;
     }
 
     /**
-     * @return the listaNombres
+     * @param _eventTime the event_time to set
      */
-    public Collection<String> getListaNombres() {
-        return listaNombres;
+    public void setEventTime(int _eventTime)
+    {
+        this.event_time = _eventTime;
     }
 
-    public void addNombre (String _nuevoNombre){
-        listaNombres.add(_nuevoNombre);
+    public int getInhibitTime()
+    {
+        return inhibit_time;
     }
 
-
-    public boolean  deleteNombre (String _nombre){
-        return listaNombres.remove(_nombre);
+    public void setInhibitTime(int inhibit_time)
+    {
+        this.inhibit_time = inhibit_time;
     }
 
-    /**
-     * @return the refresco
-     */
-    public int getRefresco() {
-        return refresco;
+    public void updateRandomName()
+    {
+        this.realBasketName = basketName + BASKET_NAME_SEPARATOR
+                + Long.toString(Math.abs(r.nextInt()), 36);
     }
-
-    /**
-     * @param refresco the refresco to set
-     */
-    public void setRefresco(int refresco) {
-        this.refresco = refresco;
-    }
-
-    public void updateNombreAleatorio(){
-        Random r = new Random();
-        //cesta = cesta+"_"+Long.toString(Math.abs(r.nextLong()), 36);
-        this.nombreCesta = this.prefijoCesta+"_"+Long.toString(Math.abs(r.nextInt()), 36);
-    }
-
-
 }
