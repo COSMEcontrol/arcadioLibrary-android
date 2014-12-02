@@ -11,7 +11,7 @@ package com.arcadio.api.v1.service;
  
 /**
 *
-* @author fserna
+* @author fserna,
 */
 public enum CosmeStates {
 
@@ -25,85 +25,85 @@ public enum CosmeStates {
 
 
 
-    DESCONECTADO,
+    DISCONNECTED,
 
     // Nos disponemos a establecer la conexión
-    INTENTANDO_CONEXION,
+    TRYING_COMMUNICATION,
 
     // se ha intentado pero no ha podido establecerse
-    CONEXION_IMPOSIBLE,
+    CONNEXION_IMPOSSIBLE,
 
     // había una conexión OK, pero se ha interrumpido
-    CONEXION_INTERRUMPIDA,
+    CONNECTION_INTERRUPTED,
 
     // Ya hay conexión, pero estamos esperando a recibir los 2 parámetros ID_IU
     // y ID_MAQ de la pasarela alta
-    INTENTANDO_ESTABLECER_COMUNICACION,
+    TRYING_TO_ESTABLISH_COMMUNICATION,
 
     // NO estamos en situación de intercambiar telegramas
-    COMUNICACION_IMPOSIBLE,
+    COMMUNICATION_IMPOSSIBLE,
 
     // Se ha superado el tiempo de espera prefijado para establecer la
     // COMUNICACION
-    COMUNICACION_TIMEOUT,
+    COMMUNICATION_TIMEOUT,
 
     // No puede accederse a Celestino
     CELESTINO_UNREACHABLE,
 
     //Se establece cuando se solicita las listas de: nombres/tipos/nombres-tipo
-    PETICION_LISTAS,
+    ASKING_LIST,
 
     // podemos inicializar la máquina (crear sus cestas, etc...) y A
     // FUNCIONAR!!!
-    COMUNICACION_OK,
+    COMMUNICATION_OK,
 
     //Se están recibiendo los "n" telegramas con la lista de nombres
-    RECIBIENDO_LISTA_NOMBRES,
+    RECEIVING_NAMES_LIST,
 
     // Se ha recibido el último telegrama
-    RECIBIDA_LISTA_NOMBRES,
+    NAMES_LIST_RECEIVED,
 
     // Recibida la lista de clases
-    RECIBIENDO_LISTA_CLASES,
-    RECIBIDA_LISTA_CLASES,
+    RECEIVING_CLASS_LIST,
+    RECEIVED_CLASS_LIST,
 
     //Lista de tipos recibida
-    RECIBIENDO_LISTA_TIPOS,
-    RECIBIDA_LISTA_TIPOS,
+    RECEIVING_TYPE_LIST,
+    RECEIVED_TYPE_LIST,
 
     //Lista de nombres-Tipos recibida
-    RECIBIENDO_LISTA_NOMBRES_TIPOS,
-    RECIBIDA_LISTA_NOMBRES_TIPOS,
+    RECEIVING_TYPE_NAME_LIST,
+    RECEIVED_TYPE_NAME_LIST,
 
-    RECIBIDA_CESTA,   // ha llegado una cesta
-    RECIBIDO_LEER,   // se ha recibido una lectura puntual
-    RECIBIDO_ESCRIBIR, // se ha recibido el eco de una escritura
+    BAG_RECEIVED,   // ha llegado una cesta
+    READ_RECEIVED,   // se ha recibido una lectura puntual
+    WRITE_CONFIRMED, // se ha recibido el eco de una escritura
 
-    RECIBIDO_ISNUMERIC,  // se ha recibido un telegrama "is_numeric"
+    ISNUMERIC_RECEIVED,  // se ha recibido un telegrama "is_numeric"
 
     MUESTREADOR_CREADO_OK,  // significa que tenemos constancia de que el muestreador ya ha sido creado en el runtime
     RECIBIDO_TELEGRAMA_MUESTREANDO, // se ha activado un muestreador
     RECIBIDO_DATOS_MUESTREADOR, // ha llegao un telegrama con un chunk de datos de un muestreador
     MUESTREADOR_FIN,  //arcadio ya ha recibido todas las muestras del muestreador
 
-    RECIBIDO_TIPO_NOMBRE,
-    RECIBIDO_LISTA_NOMBRES_CONFIGURABLES,
-    RECIBIDO_LISTA_NOMBRES_CONFIGURABLES_RESERVADOS,
+    RECEIVED_NAME_TYPE,
+    RECEIVED_NAME_LIST_CONFIGURABLES,
+    RECEIVED_NAME_LIST_CONFIGURABLES_RESERVED,
 
-    RECIBIDO_TELEGRAMA_SOLICITUD_FICHERO_TEXTO,
+    RECEIVED_TELEGRAM_TEXT_FILE_REQUEST,
 
-    RECIBIDO_TELEGRAMA_DESCONOCIDO,
-    RECIBIDA_LISTA_INSTANCIAS_CLASES,
+    RECEIVED_UNKNOWN_TELEGRAM,
+    RECEIVED_INSTANCES_LIST_CLASS,
 
-    RECIBIDO_EVENTO_DE_PASARELA,
+    RECEIVED_GATEWAY_EVENT,
 
 
 
 
     // -----EVENTOS QUE VIENEN DE LA PASARELA --------------------------------------------------
-    ERROR_INDETERMINADO,
-    FICHERO_EMC_RECIBIDO_OK,
-    FICHERO_EMC_RECIBIDO_ERROR,
+    UNKNOWN_ERROR,
+    FICHERO_EMC_RECEIVED,
+    FICHERO_EMC_RECEIVED_ERROR,
     ADMINISTRATOR_PASSWORD_ERROR,
     ADMINISTRATOR_OK,
     USER_OK,

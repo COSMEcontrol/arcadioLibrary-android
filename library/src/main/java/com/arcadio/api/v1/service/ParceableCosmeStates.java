@@ -6,7 +6,7 @@ import android.os.Parcelable;
 
 public class ParceableCosmeStates implements Parcelable{
 		
-		private CosmeStates state = CosmeStates.DESCONECTADO;
+		private CosmeStates state = CosmeStates.DISCONNECTED;
 		
 		
 		public CosmeStates getState(){
