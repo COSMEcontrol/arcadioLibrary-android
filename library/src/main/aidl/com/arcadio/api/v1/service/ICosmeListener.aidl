@@ -1,23 +1,27 @@
 package com.arcadio.api.v1.service;
 import java.util.List;
-import com.arcadio.modelo.ItemVariable;
-import com.arcadio.api.v1.service.ParceableCosmeError;
 import com.arcadio.api.v1.service.ParceableCosmeStates;
-import com.arcadio.modelo.VariablesList;
+import com.arcadio.common.VariablesList;
 
 interface ICosmeListener {
 
-	void notificarRefrescoVariables (String _nombreCesta,inout VariablesList _listaVariables);
-	
-	void notificarEstadoConexion (inout ParceableCosmeStates _estado);
-   
-    void notificarError (String _txtError);
-    
-   // void notificarEvento(EstadosCosme _codEvento, Telegrama _tlg);
-   void notificarListaNombres(inout List<ItemVariable> listaNombres);
-   void notificarIsNumeric(inout ItemVariable variable);
-   void notificarNomACesta(String nomCesta, String nomVariable);
-   void notificarCestaCreada(String nomCesta);
-   
+        /*
+            *Receives as parameters the name of the basket received
+            * and the list of variables that it contains.
+         */
+
+        void onDataReceived(String _bagName,inout VariablesList _variableList);
+
+       /*
+            *Receives as a parameter the new state that has transited,
+             * (CosmeStates).
+        */
+        void onStateChange(inout ParceableCosmeStates _state);
+
+        /*
+            *Receives as a parameter an error code,
+            *  Invoked when Arcadio detects some kind of error.
+         */
+        void onError(String _txtError);
 
 }

@@ -1,10 +1,10 @@
-package com.arcadio.modelo;
+package com.arcadio.common;
 
 
 
 public class Profile {
 	/**
-	 * @author alberto
+	 * @author Alberto Azuara García 02/12/2014
 	 *
 	 */
 

@@ -3,7 +3,7 @@ package com.arcadio.api.v1.service;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.arcadio.modelo.AccessLevels;
+import com.arcadio.common.AccessLevels;
 
 
 public class ParceableAccessLevels implements Parcelable{

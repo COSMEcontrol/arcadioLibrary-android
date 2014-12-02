@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package com.arcadio.modelo;
+package com.arcadio.common;
 
 /**
  *

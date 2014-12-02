@@ -13,7 +13,7 @@
  * 
  */
 
-package com.arcadio.modelo;
+package com.arcadio.common;
 
 
 import android.os.Parcel;
@@ -24,10 +24,9 @@ import java.util.HashMap;
 
 
 /**
-* Class description goes here.
 *
-* @version 1.0 13 Feb 2005
-* @author Alberto Azuara
+* @version 1.0
+* @author Alberto Azuara García
 */
 public class VariablesList implements Parcelable {
 
@@ -60,7 +59,7 @@ public class VariablesList implements Parcelable {
 
 
     /**
-     * contiene una lista de variables, ItemVariable
+     * variable list, ItemVariable
      */
     private HashMap<String, ItemVariable> vars;
 
@@ -76,93 +75,92 @@ public class VariablesList implements Parcelable {
     *  
     * 
     */
-    public void anadir(String nombre) {      
-        //System.out.print(nombre);
-        ItemVariable v = new ItemVariable (nombre);
-	vars.put(nombre, v);
+    public void add(String _name) {
+        //System.out.print(_name);
+        ItemVariable v = new ItemVariable (_name);
+	    vars.put(_name, v);
     } 
 
     /**
     *  
     * 
     */
-    public void anadir(String nombre, double valor) {        
-        ItemVariable v = new ItemVariable (nombre, valor);
-	vars.put (nombre, v);
+    public void add(String _name, double _value) {
+        ItemVariable v = new NumericVariable(_name, _value);
+	    vars.put (_name, v);
     } 
     
     /**
     *  
     * 
     */
-    public void anadir(String nombre, String valor) {        
-        ItemVariable v = new ItemVariable (nombre, valor);
-	vars.put (nombre, v);
+    public void add(String _name, String _valor) {
+        ItemVariable v = new TextVariable(_name, _valor);
+	    vars.put (_name, v);
     } 
 
     /**
     *  
     * 
     */
-    public void anadir(ItemVariable v) {        
-	vars.put (v.getNombre(), v);
+    public void add(ItemVariable v) {
+	vars.put (v.getName(), v);
     } 
 
     /**
     *  
     * 
     */
-    public HashMap getValores() {        
+    public HashMap getMap() {
         return vars;
     } 
     
-    public ItemVariable getVariable (String _nombreVariable){
-        ItemVariable v = (ItemVariable) vars.get(_nombreVariable);
-        
+    public ItemVariable getVariable (String _variableName){
+        ItemVariable v = (ItemVariable) vars.get(_variableName);
         return v;
     }
     
     
-    public double getValorVariable (String _nombreVariable){
+    public double getValue(String _variableName){
         double dd = 0.0;
-        ItemVariable v = (ItemVariable) vars.get(_nombreVariable);
+        NumericVariable v = (NumericVariable) vars.get(_variableName);
         if (v!=null){
-            dd = v.getValor();
+            dd = v.getValue();
         }
         return dd;
     }
     
     
     
-    public String getValorTextoVariable (String _nombreVariable){
+    public String getTextValue(String _variableName){
         String txt = null;
-        ItemVariable v = (ItemVariable) vars.get(_nombreVariable);
+        TextVariable v = (TextVariable) vars.get(_variableName);
         if (v!=null){
-            txt = v.getValor_txt();
+            txt = v.getValue();
         }
         return txt;
     }
     
     
     
-    public Collection<ItemVariable> getLista(){
+    public Collection<ItemVariable> getList(){
         return vars.values();
     }
     
     
-    public boolean existe (String _nombreVariable){
-        return vars.containsKey(_nombreVariable);
+    public boolean exist(String _variableName){
+        return vars.containsKey(_variableName);
     }
 
-    public void eliminar (String _nombre){
-        this.vars.remove(_nombre);
+    public void remove(String _name){
+        this.vars.remove(_name);
     }
 
     /**
      * Erases all the ItemVariables it could contain.
      * After executing this method, the instances contains 0 ItemVariables.
      */
-    public void clear(){
+    public void removeAll(){
         this.vars.clear();
     }
  }

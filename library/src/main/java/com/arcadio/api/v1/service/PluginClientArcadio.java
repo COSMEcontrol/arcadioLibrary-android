@@ -9,14 +9,16 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import com.arcadio.CosmeListener;
-import com.arcadio.modelo.ItemVariable;
-import com.arcadio.modelo.NameList;
-import com.arcadio.modelo.VariablesList;
+import com.arcadio.common.ItemVariable;
+import com.arcadio.common.NameList;
+import com.arcadio.common.VariablesList;
 import com.arcadio.service.api.v1.listeners.OnClientStartedListener;
 
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Created by Alberto Azuara García on 26/11/14.
+ */
 
 public class PluginClientArcadio {
 	

@@ -1,4 +1,4 @@
-package com.arcadio.modelo;
+package com.arcadio.common;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +10,7 @@ import java.util.Random;
  * deba hacer absolutamente nada.
  * @author Alberto Azuara
  */
-public class Basket{
+public class Bag {
     public static final String BASKET_NAME_SEPARATOR = "-";
 
     private static Random r = new Random();
@@ -22,7 +22,7 @@ public class Basket{
     private int event_time;
     private int inhibit_time;
 
-    public Basket (String _name, int event_time, int inhibit_time)
+    public Bag(String _name, int event_time, int inhibit_time)
     {
         this.basketName = _name;
 

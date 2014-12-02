@@ -4,11 +4,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 
 import com.arcadio.CosmeListener;
-import com.arcadio.modelo.ItemVariable;
-import com.arcadio.modelo.VariablesList;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.arcadio.common.VariablesList;
 
 public class AdapterICosmeListener extends ICosmeListener.Stub {
 	
@@ -21,59 +17,26 @@ public class AdapterICosmeListener extends ICosmeListener.Stub {
 
 
 	@Override
-	public void notificarRefrescoVariables(String _nombreCesta, VariablesList _listaVariables) throws RemoteException {
-		cosmeListener.notificarRefrescoVariables(_nombreCesta, _listaVariables);
+	public void onDataReceived(String _nombreCesta, VariablesList _listaVariables) throws RemoteException {
+		cosmeListener.onDataReceived(_nombreCesta, _listaVariables);
 		
 	}
 
 	@Override
-	public void notificarEstadoConexion(ParceableCosmeStates _estado)
+	public void onStateChange(ParceableCosmeStates _estado)
 			throws RemoteException {
-		cosmeListener.notificarEstadoConexion(_estado.getState());
+		cosmeListener.onStateChange(_estado.getState());
 	}
 
 	@Override
-	public void notificarError(String _txtError) throws RemoteException {
-		cosmeListener.notificarError(_txtError);
+	public void onError(String _txtError) throws RemoteException {
+		cosmeListener.onError(_txtError);
 		
 	}
-
-	@Override
-	public void notificarListaNombres(List<ItemVariable> listaNombres)
-			throws RemoteException {
-		ArrayList<ItemVariable> lista = new ArrayList<ItemVariable>();
-		lista.addAll(listaNombres);
-		cosmeListener.notificarListaNombres(lista);
-		
-	}
-
-	@Override
-	public void notificarIsNumeric(ItemVariable variable)
-			throws RemoteException {
-		cosmeListener.notificarIsNumeric(variable);
-		
-	}
-
-
 
 	@Override
 	public IBinder asBinder() {
 		return this;
-	}
-
-
-
-	@Override
-	public void notificarNomACesta(String nomCesta, String nomVariable)
-			throws RemoteException {
-//		cosmeListener.notificarNomACesta(new Cesta(nomCesta), new ItemVariable(nomVariable));
-	}
-
-
-
-	@Override
-	public void notificarCestaCreada(String nomCesta) throws RemoteException {
-//		cosmeListener.notificarCestaCreada(new Cesta(nomCesta));
 	}
 
 }
