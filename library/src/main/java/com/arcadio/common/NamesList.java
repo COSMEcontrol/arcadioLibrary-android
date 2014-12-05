@@ -17,7 +17,7 @@ import java.util.*;
 * @version 1.0 02/12/2014
 * @author Alberto Azuara
 */
-public class NameList implements Parcelable {
+public class NamesList implements Parcelable {
 
     /**
      * contiene una lista de variables, ItemVariable
@@ -36,7 +36,7 @@ public class NameList implements Parcelable {
     *  
     * 
     */
-    public NameList(){
+    public NamesList(){
 	
     }
 
@@ -109,21 +109,21 @@ public class NameList implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeMap(names_list);
     }
-    public NameList readFromParcel(Parcel in) {
-        in.readMap(names_list, NameList.class.getClassLoader());
+    public NamesList readFromParcel(Parcel in) {
+        in.readMap(names_list, NamesList.class.getClassLoader());
         return this;
     }
-    public NameList(Parcel in) {
+    public NamesList(Parcel in) {
         readFromParcel(in);
     }
-    public static final Parcelable.Creator<NameList> CREATOR
-            = new Parcelable.Creator<NameList>() {
-        public NameList createFromParcel(Parcel in) {
-            return new NameList(in);
+    public static final Parcelable.Creator<NamesList> CREATOR
+            = new Parcelable.Creator<NamesList>() {
+        public NamesList createFromParcel(Parcel in) {
+            return new NamesList(in);
         }
 
-        public NameList[] newArray(int size) {
-            return new NameList[size];
+        public NamesList[] newArray(int size) {
+            return new NamesList[size];
         }
     };
 

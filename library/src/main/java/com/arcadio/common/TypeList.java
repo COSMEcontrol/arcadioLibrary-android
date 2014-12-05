@@ -19,7 +19,7 @@ import java.util.*;
 public class TypeList implements Parcelable {
 
 
-    private SortedMap<String, NameList> tipos = new TreeMap();
+    private SortedMap<String, NamesList> tipos = new TreeMap();
    //private SortedMap <String, ListaNombres> tipos  = Collections.synchronizedSortedMap(new TreeMap());
     
     /**
@@ -35,12 +35,12 @@ public class TypeList implements Parcelable {
     * 
     */
     public void addType(String _typeName) {
-        NameList names = new NameList();
+        NamesList names = new NamesList();
 	    tipos.put(_typeName, names);
     } 
 
     public void anadirNombreDeTipo (String _tipo, String _nombre){
-        NameList nombres = tipos.get(_tipo);
+        NamesList nombres = tipos.get(_tipo);
         nombres.add(_nombre);
         tipos.put(_tipo, nombres);
     }
@@ -50,7 +50,7 @@ public class TypeList implements Parcelable {
     * Dado un tipo, devuelve aquellos nombres que sean de ese tipo.
     */
     public Collection<String> getNombresDeTipo(String _tipo) { 
-        NameList names = tipos.get(_tipo);
+        NamesList names = tipos.get(_tipo);
         if (names!=null){
             return names.getNameList();
         }else{

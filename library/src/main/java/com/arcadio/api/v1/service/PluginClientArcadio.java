@@ -10,14 +10,14 @@ import android.util.Log;
 
 import com.arcadio.CosmeListener;
 import com.arcadio.common.ItemVariable;
-import com.arcadio.common.NameList;
+import com.arcadio.common.NamesList;
 import com.arcadio.common.VariablesList;
 import com.arcadio.service.api.v1.listeners.OnClientStartedListener;
 
 import java.util.List;
 import java.util.Map;
 /**
- * Created by Alberto Azuara García on 26/11/14.
+ * Created by Alberto Azuara García on 05/12/14.
  */
 
 public class PluginClientArcadio {
@@ -84,27 +84,26 @@ public class PluginClientArcadio {
             Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
         }
 		try {
-			
-			remoteArcadio.connect(connectionId, new ISessionStartedListener.Stub() {		
-				@Override
-				public IBinder asBinder() {
-					return this ;
-				}
-				
-				@Override
-				public void onSessionStarted(int _sessionId, String _sessionKey)
-						throws RemoteException {
-					sessionId = _sessionId;
-					sessionKey = _sessionKey;
-					Log.v("PluginClientArcadioLibrary-->","Client identifier received API");
-				}
-				
-				@Override
-				public void onSessionError(String error) throws RemoteException {
-					Log.v("PluginClientArcadioLibrary-->","Session Error: "+error);
-					
-				}
-			}, new AdapterICosmeListener(cosmeListener));
+			remoteArcadio.connect1(connectionId, new ISessionStartedListener.Stub() {
+                @Override
+                public IBinder asBinder() {
+                    return this;
+                }
+
+                @Override
+                public void onSessionStarted(int _sessionId, String _sessionKey)
+                        throws RemoteException {
+                    sessionId = _sessionId;
+                    sessionKey = _sessionKey;
+                    Log.v("PluginClientArcadioLibrary-->", "Client identifier received API");
+                }
+
+                @Override
+                public void onSessionError(String error) throws RemoteException {
+                    Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
+
+                }
+            }, new AdapterICosmeListener(cosmeListener));
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -120,7 +119,7 @@ public class PluginClientArcadio {
 		try {
 			if(remoteArcadio== null)
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-			remoteArcadio.desconectar(sessionId, sessionKey);
+			remoteArcadio.disconnect(sessionId, sessionKey);
 		} catch (RemoteException e) {
 			onclientstartedlistener.onClientStopped();	
 		}
@@ -148,998 +147,290 @@ public class PluginClientArcadio {
      * dedicada sólo a este propósito y ejecutada en un thread independiente
      * para no interferir con el resto de la aplicación.
      */
-    public void solicitarListaNombres(){
+    public void addNameToBag(String _bagName, String _name){
         try {
-            remoteArcadio.solicitarListaNombres(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.addNameToBag(sessionId, sessionKey, _bagName, _name);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
     }
-
-    /**
-     * Se envía un telegrama que solicita la lista de nombres que posean el prefijo
-     * que se indica.
-     * Cuando la lista de nombres se muestra en forma de árbol, permite obtener los
-     * nombres que deben de colgar de una rama dada (el prefijo).
-     * Cuando llegue el telegram de respuesta se disparará el evento RECIBIDA_LISTA_NOMBRES.
-     * @param _prefijo
-     */
-    public void solicitarListaNombresNivel(String _prefijo){
+    public void blockingRead1(String _name, int _timeout){
         try {
-            remoteArcadio.solicitarListaNombresNivel(sessionId, sessionKey, _prefijo);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.blockingRead1(sessionId, sessionKey, _name, _timeout);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-    }
 
-    /**
-     * Este método permite obtener la lista de nombres públicos definidiso en
-     * el sistema, pero debe invocarse después de:
-     *      1. haber invocado anteriormetne el método "solicitarNombres()"
-     *      2. haber llegado al estado EstadosEmcos.LISTA_RECIBIDA
-     * Esto es así porque la lista de nombres puede ser MUY larga, y necesitar
-     * un número indeterminado de telegramas para su recepción (y también un número
-     * indeterminado de segundos según las condiciones de la comunicación).
-     *
-     * @return Devuelve la lista de los nombres conocidos por el sistema. Si no se
-     * ha llamado previamente al método "solicitarNombres()" o no se ha esperado
-     * al evento EstadosEmcos.LISTA_RECIBIDA, la lista recibida podrá estar incompleta.
-     */
-    public NameList getListaNombres(){
-        NameList nameList = null;
+    }
+    public void blockingRead2(String _name, int _timeout){
         try {
-            nameList = remoteArcadio.getListaNombres(sessionId,sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.blockingRead2(sessionId, sessionKey, _name, _timeout);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return nameList;
-    }
 
-    /**
-     * Devuelve la lista de nombres cuyo tipo coincida con el solicitado.
-     * IMPORTANTE: es un método síncrono. No sigue el modelo de programación habitual en
-     * ConexionEmcos (asíncrono).
-     * @param _tipo
-     * @param _msTimeout
-     * @return Lista de nombres cuyo tipo es el que se pasa como parámetro.
-     */
-    public List<String> solicitarListaNombresDeTipoBloqueo(String _tipo, int _msTimeout){
-        List<String> nameList = null;
+    }
+    public void blockingWrite(String _name, double _value, int _timeout){
         try {
-            nameList = remoteArcadio.solicitarListaNombresDeTipoBloqueo(sessionId, sessionKey, _tipo, _msTimeout);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.blockingWrite(sessionId, sessionKey, _name, _value, _timeout);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return nameList;
+
     }
 
-    List<String> solicitarListaNombresTipoHabilitadosDeTipoBloqueo(String tipo, int _msTimeout){
-        List<String> nameList = null;
+    public void connect2(ISessionStartedListener sessionListener, ICosmeListener _iCosmeListener, String _password, String _host, int _port){
         try {
-            nameList = remoteArcadio.solicitarListaNombresTipoHabilitadosDeTipoBloqueo(sessionId,sessionKey,tipo,_msTimeout);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.connect2(sessionListener, _iCosmeListener, _password, _host, _port);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return nameList;
-    }
 
-    /**
-     *
-     * @param _idPrimerNombre
-     */
-    void solicitarSubListaNombres(int _idPrimerNombre){
+    }
+    public void createBag(String _bagName){
         try {
-            remoteArcadio.solicitarSubListaNombres(sessionId,sessionKey,_idPrimerNombre);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.createBag(sessionId, sessionKey, _bagName);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-    }
 
-    /**
-     *
-     */
-    public void solicitarListaTipos(){
+    }
+    public void deleteBag(String _bagName){
         try {
-            remoteArcadio.solicitarListaTipos(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.deleteBag(sessionId, sessionKey, _bagName);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
+
     }
-    /**
-     *
-     * @return
-     */
-    public List<String> getListaTipos(){
-        List<String> typesList = null;
+    public int getBagPeriod(String _bagName){
         try {
-            remoteArcadio.getListaTipos(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.getBagPeriod(sessionId, sessionKey, _bagName);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return typesList;
+        return 0;
     }
-
-    /**
-     *
-     */
-    public void solicitarListaClases(){
+    public List<String> getBags(){
         try {
-            remoteArcadio.solicitarListaClases(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.getBags(sessionId, sessionKey);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
+        return null;
     }
-    /**
-     *
-     */
-    public void solicitarListaNombresConfigurables(){
+    public long getPingLatencyMs(){
         try {
-            remoteArcadio.solicitarListaNombresConfigurables(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.getPingLatencyMs(sessionId, sessionKey);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
+        return 0;
     }
-
-    /**
-     *
-     * @return
-     */
-    public NameList getListaNombresConfigurables(){
-        NameList nameList = null;
+    public ItemVariable getVariable(String _name){
         try {
-            nameList = remoteArcadio.getListaNombresConfigurables(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.getVariable(sessionId, sessionKey, _name);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return nameList;
+        return null;
     }
-
-    /**
-     *
-     */
-    public void solicitarListaNombresConfigurablesReservados(){
+    public List<ItemVariable> getVariables(List<String> _names){
         try {
-            remoteArcadio.solicitarListaNombresConfigurablesReservados(sessionId,sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.getVariables(sessionId, sessionKey, _names);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
+        return null;
     }
-
-    /**
-     *
-     * @return
-     */
-    public NameList getListaNombresConfigurablesReservados(){
-        NameList nameList = null;
-        try {
-            nameList = remoteArcadio.getListaNombresConfigurablesReservados(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return nameList;
-    }
-
-    /**
-     *
-     * @param _nombreTipo
-     */
-    public void solicitarListaNombresTipos(String _nombreTipo){
-        try {
-            remoteArcadio.solicitarListaNombresTipos(sessionId, sessionKey, _nombreTipo);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Map getListaNombresTipos(){
-        Map listaNombresTipos = null;
-        try {
-            listaNombresTipos = remoteArcadio.getListaNombresTipos(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return listaNombresTipos;
-    }
-
-    /**
-     *
-     */
-    public void lecturaPuntual(VariablesList _listaVariables){
-        try {
-            remoteArcadio.lecturaPuntual(sessionId, sessionKey, _listaVariables);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Igualico que lecturaPuntual, pero manda el telegrama ping, y registra
-     * el instante en que se envió.
-     * @param _listaVariables
-     */
-    void ping(VariablesList _listaVariables){
-        try {
-            remoteArcadio.ping(sessionId, sessionKey, _listaVariables);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *
-     * @param _listaVariables
-     * @param _msTimeout
-     * @return
-     */
-    VariablesList leerBloqueo(VariablesList _listaVariables, int _msTimeout){
-        VariablesList variablesList = null;
-        try {
-            variablesList = remoteArcadio.leerBloqueo(sessionId, sessionKey, _listaVariables, _msTimeout);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return variablesList;
-    }
-
-
-    /**
-     *
-     * @param _prefijoCesta No debe existir ninguna otra cesta con el mismo prefijo. Tampoco debe
-     * contener ningún carácter Cesta.BASKET_NAME_SEPARATOR . En cuaquiera de estos dos casos lanza una EmcosException.
-     * @param _nombres
-     */
-    public void crearCesta(String _prefijoCesta, List<String> _nombres,
-                    int event_time, int inhibit_time){
-        try {
-            remoteArcadio.crearCesta(sessionId,sessionKey, _prefijoCesta, _nombres, event_time, inhibit_time);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    public List<String> getCestas(){
-        List<String> basketList = null;
-        try {
-            basketList = remoteArcadio.getCestas(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return basketList;
-    }
-
-    /**
-     * Permite añadir un único nombre a la cesta indicada.
-     * Puede usarse "insertarNombres" si se desea insertar un conjunto de ellos.
-     * @param _prefijoCesta Nombre de la cesta a la que van a añadirse los nombres
-     * @param _nombre Nombre que va a insertarse en la cesta
-     */
-    public void insertarNombre(String _prefijoCesta, String _nombre){
-        try {
-            remoteArcadio.insertarNombre(sessionId, sessionKey,_prefijoCesta, _nombre);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-    /**
-     * Permite añadir una lista de nombres a la cesta que se indica como primer parámetro.
-     * @param _prefijoCesta Nombre de la cesta a la que van a añadirse los nombres
-     * @param _nombres Colección de nombres que van a insertarse en la cesta
-     */
-    public void insertarNombres(String _prefijoCesta, List<String> _nombres){
-        try {
-            remoteArcadio.insertarNombres(sessionId, sessionKey, _prefijoCesta, _nombres);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Permite eliminar un nombre de la cesta que se indica como primer parámetro.
-     * @param _prefijoCesta Nombre de la cesta de la que va a eliminarse el nombre.
-     * @param _nombre Nombre que va a eliminarse de la cesta
-     */
-    public void eliminarNombre(String _prefijoCesta, String _nombre){
-        try {
-            remoteArcadio.eliminarNombre(sessionId, sessionKey, _prefijoCesta, _nombre);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Permite eliminar una lista de nombres de la cesta que se indica como primer parámetro.
-     * @param _prefijoCesta Nombre de la cesta a la que van a añadirse los nombres
-     * @param _nombres Colección de nombres que van a eliminarse de la cesta
-     */
-    public void eliminarNombres(String _prefijoCesta,List<String> _nombres){
-        try {
-            remoteArcadio.eliminarNombres(sessionId, sessionKey, _prefijoCesta, _nombres);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Permite modificar el periodo de refresco de la cesta indicada.
-     * @param _prefijoCesta Nombre de la cesta a la que va a modificarse su periodo de refresco.
-     * @param _nuevoPeriodoRefresco Nuevo periodo en ms.
-     */
-    public void setPeriodoCesta(String _prefijoCesta, int _nuevoPeriodoRefresco){
-        try {
-            remoteArcadio.setPeriodoCesta(sessionId, sessionKey, _prefijoCesta, _nuevoPeriodoRefresco);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    public int getPeriodoCesta(String _prefijoCesta){
-        int basketPeriod = 0;
-        try {
-            remoteArcadio.getPeriodoCesta(sessionId,sessionKey, _prefijoCesta);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return  basketPeriod;
-    }
-
-    /**
-     *  DEPRECATED. Ha sido sustituido por <b>eliminarCesta(_nc)</b>. Todos los otros métodos similares se llaman eliminarXXXX, y
-     * este no tiene por qué ser una excepción.
-     * Cualquier día de estos este método desaparecerá de la API.
-     * @param _prefijoCesta Nombre de la cesta que deseamos eliminar.
-     */
-    public void borrarCesta(String _prefijoCesta){
-        try {
-            remoteArcadio.borrarCesta(sessionId, sessionKey, _prefijoCesta);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *  Permite destruir una cesta existente.
-     * @param _prefijoCesta Nombre de la cesta que deseamos eliminar.
-     */
-    public void eliminarCesta(String _prefijoCesta){
-        try {
-            remoteArcadio.eliminarCesta(sessionId, sessionKey, _prefijoCesta);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    public void setRetardoTelegramas(int _nuevoRetardoTelegramas){
-        try {
-            remoteArcadio.setRetardoTelegramas(sessionId, sessionKey, _nuevoRetardoTelegramas);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-   public boolean existeNombre(String _prefijoCesta, String _nombre){
-       boolean exist = false;
-       try {
-           exist = remoteArcadio.existeNombre(sessionId, sessionKey, _prefijoCesta, _nombre);
-       } catch (RemoteException e) {
-           onclientstartedlistener.onClientStopped();
-       }
-       return exist;
-   }
-
-    /**
-     * Devuelve el ItemVariable asociado al nombre que se pasa como parametro.
-     * Contendra el último valor recibido en una cesta o en un telegrama leer, leer_bloqueo, ping.
-     * @param _nombre
-     * @return
-     */
-    public ItemVariable getVariable(String _nombre){
-        ItemVariable itemVariable = null;
-        try {
-            remoteArcadio.getVariable(sessionId, sessionKey, _nombre);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return itemVariable;
-    }
-
-    public List<ItemVariable> getVariables(List<String> _nombres){
-        List<ItemVariable> itemVariableList = null;
-        try {
-            itemVariableList = remoteArcadio.getVariables(sessionId, sessionKey, _nombres);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return itemVariableList;
-    }
-
-    /**
-     *
-     * @param _nombreVariable
-     * @param _nuevoValor
-     */
-    public void modificarVariable(String _nombreVariable, double _nuevoValor){
-        try {
-            remoteArcadio.modificarVariable1(sessionId, sessionKey, _nombreVariable, _nuevoValor);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *
-     * @param _nombreVariable
-     * @param _nuevoValor
-     */
-    public void modificarVariable(String _nombreVariable, String _nuevoValor){
-        try {
-            remoteArcadio.modificarVariable2(sessionId, sessionKey, _nombreVariable, _nuevoValor);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *
-     * @param _lv
-     */
-    public void modificarVariable(VariablesList _lv){
-        try {
-            remoteArcadio.modificarVariable3(sessionId,sessionKey, _lv);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-    /**
-     * ############   ????
-     * @param _lv
-     * @param first
-     * @param dim
-     */
-    public void modificarVariable(List<ItemVariable> _lv, int first, int dim){
-        try {
-            remoteArcadio.modificarVariable4(sessionId, sessionKey, _lv, first, dim);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *  ####COMPROBAR QUE FUNCIONAAAA. Ahora usa waitUltimoTelegrama
-     *
-     * @param _nombreVariable
-     * @param _nuevoValor
-     * @param _msTimeout
-     */
-    public void modificarVariableBloqueo(String _nombreVariable, double _nuevoValor,
-                                         int _msTimeout){
-        try {
-            remoteArcadio.modificarVariableBloqueo1(sessionId, sessionKey, _nombreVariable,
-                    _nuevoValor, _msTimeout);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * ####COMPROBAR QUE FUNCIONAAAA. Ahora usa waitUltimoTelegrama
-     *
-     * @param _nombreVariable
-     * @param _nuevoValor
-     */
-    public void modificarVariableBloqueo(String _nombreVariable, String _nuevoValor){
-        try {
-            remoteArcadio.modificarVariable2(sessionId, sessionKey, _nombreVariable, _nuevoValor);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * ####COMPROBAR QUE FUNCIONAAAA. Ahora usa waitUltimoTelegrama
-     *
-     * @param _lv
-     */
-    void modificarVariableBloqueo(VariablesList _lv){
-        try {
-            remoteArcadio.modificarVariable3(sessionId, sessionKey, _lv);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-
-        /* TODO ÁNGEL: Para qué???
-        public void modificarVariableBloqueo(ArrayList<ItemVariable> _lv, int quantum,int elStruct,
-        int _msTimeout,String downloaded)
-        throws EmcosTimeoutException ;
-
-        public void modificarVariableBloqueo(ArrayList<ItemVariable> _lv, int init,int quantum,
-        int _msTimeout)
-        throws EmcosTimeoutException;
-        */
-
-    /**
-     * Permite conocer el último evento de estado recibido.
-     * @return
-     */
-    public ParceableCosmeStates getEstado(){
-        ParceableCosmeStates parceableCosmeStates = null;
-        try {
-            parceableCosmeStates = remoteArcadio.getEstado(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return parceableCosmeStates;
-    }
-
-    /**
-     * Permite crear un nuevo muestreador.
-     *
-     * @param _nombreVariableAMuestrear
-     * @param _nombreVariableDisparo
-     * @param _numMuestras
-     * @param _msMuestreo
-     * @return
-     */
-
-
-    /**
-     *  Arcadio Plus
-     * El parámetro "_pathFichero" contiene la ruta relativa al fichero solicitado,
-     * a partir del directorio del proyecto (por defecto: /usr/emcos/projects/xxx"
-     *
-     * @param _pathFichero
-     */
-    public void solicitarFicheroTexto(String _nombreInstancia, String _pathFichero){
-        try {
-            remoteArcadio.solicitarFicheroTexto(sessionId, sessionKey, _nombreInstancia, _pathFichero);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Arcadio Plus
-     * El parámetro "_contenidoFicheroEMC" contiene el contenido del nuevo
-     * fichero ".emc" que ha modificado un gestor de configuración.
-     *
-     * @param _contenidoFicheroEMC
-     */
-    public void enviarActualizacionFicheroEMC(String _contenidoFicheroEMC){
-        try {
-            remoteArcadio.enviarActualizacionFicheroEMC(sessionId, sessionKey, _contenidoFicheroEMC);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Envía el telegrama que permite conocer a qué clase pertenece la instancia cuyo nombre se
-     * pasa como parámetro.
-     */
-    public String getTipoNombreBloqueo(String _nombre){
-        String nameBlock = "";
-        try {
-           nameBlock=remoteArcadio.getTipoNombreBloqueo(sessionId, sessionKey, _nombre);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return nameBlock;
-    }
-
-    public void getTipoNombre(String _nombre){
-        try {
-            remoteArcadio.getTipoNombre(sessionId, sessionKey, _nombre);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *
-     * @return
-     */
-    public NameList getNombresExistentes(){
-        NameList nameList = null;
-        try {
-            remoteArcadio.getNombresExistentes(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return nameList;
-    }
-
-    public boolean isDebugON(){
-        boolean isDebugOn = false;
-        try {
-            isDebugOn = remoteArcadio.isDebugON(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return isDebugOn;
-    }
-
-    public void setDebug(boolean debug){
-        try {
-            remoteArcadio.setDebug(sessionId, sessionKey, debug);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-    public int getMsRetardoTelegramas(){
-        int msRetardoTelegrama =0;
-        try {
-            msRetardoTelegrama=remoteArcadio.getMsRetardoTelegramas(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return msRetardoTelegrama;
-    }
-    public void setMsRetardoTelegramas(int msRetardoTelegramas){
-        try {
-            remoteArcadio.setMsRetardoTelegramas(sessionId, sessionKey, msRetardoTelegramas);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-    /**
-     *Si está activado el CTP (Control de Telegramas Perdidos), devuelve el nÃºmero de telegramas
-     *que han sido enviados, pero de los que aún no hemos recibido respuesta (son por lo tanto
-     *candidatos a haberse perdido).
-     */
-    public int getNumTelegramasPendientesConfirmacion(){
-        int numTelegrams=0;
-        try {
-            numTelegrams = remoteArcadio.getNumTelegramasPendientesConfirmacion(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return numTelegrams;
-    }
-
-    /**
-     *Activa el CTP. La librería sigue la pista de los telegramas enviados, para saber
-     *si han sido contestados o si se han perdido por el camino (en cuyo caso los
-     *reenvía automáticamente).
-     *En muchas configuraciones el uso de CTP no será necesario.
-     */
-    public void activarCTP(){
-        try {
-            remoteArcadio.activarCTP(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    public void desactivarCTP(){
-        try {
-            remoteArcadio.desactivarCTP(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *El funcionamiento de CTP se basa en un thread que se despierta cada x milisegundos,
-     *y comprueba si ha hecho timeout alguno de los telegramas marcados como
-     *pendientes.
-     *Este mÃ©todo permite fijar esa "x". Cada cuÃ¡nto tiempo CTP va a buscar telegramas
-     *perdidos.
-     */
-    public void setPeriodoActivacionCTP(long _ms){
-        try {
-            remoteArcadio.setPeriodoActivacionCTP(sessionId, sessionKey, _ms);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *
-     */
-    public void setTimeoutCTP(long _ms){
-        try {
-            remoteArcadio.setTimeoutCTP(sessionId, sessionKey, _ms);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     *  Arcadio Plus
-     * ########### Replantear PLS
-     * @param _nuevoNivelAcceso
-     * @param _password
-     */
-    public void cambiarNivelAcceso(ParceableAccessLevels _nuevoNivelAcceso, String _password){
-        try {
-            remoteArcadio.cambiarNivelAcceso(sessionId, sessionKey, _nuevoNivelAcceso, _password);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Devuelve la longitud máxima (en caracteres) que podrá tener un telegrama.
-     * Si enviamos un telegrama cuya longitud supere este valor, nos exponemos a
-     * que se trunque y no sea correctamente procesado por el kernel.
-     * Mensajero no enviará telegramas de tamaño superior a este valor.
-     * @return
-     */
-    public int getMaxLengthTelegram(){
-        int maxlenghtTelegram = 0;
-        try {
-            maxlenghtTelegram = remoteArcadio.getMaxLengthTelegram(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return maxlenghtTelegram;
-    }
-
-    /**
-     * Devuelve el número de milisegundos empleados para procesar el último telegrama
-     * recibido. Mide el tiempo usado por el método run de la clase "OyenteTelegrama",
-     * desde que se sale del readLine, hasta que vuelve el bucle while para bloquearse
-     * en la espera del siguiente telegrama.
-     * Este tiempo incluye el utilizado por los métodos "notificarRefrescoVariables"
-     * (y también los otros "notificarXXX" del cliente EmcosListener.
-     *
-     * @return the msTlgProcessing
-     */
-    public long getMsTlgProcessing(){
-        long msTlgProcessing=0;
-        try {
-            msTlgProcessing = remoteArcadio.getMsTlgProcessing(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return msTlgProcessing;
-    }
-
-    /**
-     *
-     * @return Devuelve la cadena con la versión de arcadio.
-     */
-    public String getTxtVersion(){
-        String txtVersion = "";
-        try {
-            txtVersion = remoteArcadio.getTxtVersion(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return txtVersion;
-    }
-
-    /**
-     *
-     * @return Devuelve sólamente el código de versión.
-     */
-    //
     public String getVersion(){
-        String version ="";
         try {
-            remoteArcadio.getVersion(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.getVersion(sessionId, sessionKey);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return version;
+        return null;
     }
-
-    /**
-     * Envía un telegrama que nos permitirá saber si los nombres que se pasan
-     * como parametro son "int", "real" o "nonum".
-     * El telegrama de respuesta disparará el evento "RECIBIDO_ISNUMERIC".
-     *
-     * @param _listaNombres
-     */
-    public void isNumeric(NameList _listaNombres){
-        try {
-            remoteArcadio.isNumeric(sessionId, sessionKey, _listaNombres);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * ########  D  A  N  G  E  R  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     *
-     * A fecha de hoy (1.17g 22-5-2008) este método no lo llama nadie.
-     * Da mucho MIEDO!!!! Abre la puerta a inyectar cualquier veneno con total impunidad.
-     *
-     * @param _peticion
-     */
-    public void enviarTelegramaLibre (String _peticion){
-        try {
-            remoteArcadio.enviarTelegramaLibre(sessionId, sessionKey, _peticion);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Sólo se utiliza en el CTP. Candidato a desaparecer  //###########
-     * @param _tlgAReenviar
-     */
-    public void reenviarTelegrama(String _tlgAReenviar){
-        try {
-            remoteArcadio.reenviarTelegrama(sessionId, sessionKey, _tlgAReenviar);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * @return Devuelve el "num_peticion" del último telegrama que se haya enviado.
-     * Útil para gestionar los telegramas con bloqueo
-     */
-    public int getNumUltimoTelegramaEnviado(){
-        int lastNumTelegramSend=0;
-        try {
-            lastNumTelegramSend = remoteArcadio.getNumUltimoTelegramaRecibido(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return lastNumTelegramSend;
-    }
-
-    /**
-     * @return Devuelve el "num_peticion" del último telegrama que haya recibido el OyenteTelegrama.
-     * Útil para gestionar los telegramas con bloqueo
-     */
-    public int getNumUltimoTelegramaRecibido(){
-        int lastTelegramReceibed=0;
-        try {
-            lastTelegramReceibed = remoteArcadio.getNumUltimoTelegramaRecibido(sessionId,
-                    sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return lastTelegramReceibed;
-    }
-
-    /**
-     * Permite que el thread desde el que invoquemos este método se bloquee hasta que hayamos
-     * recibido el eco del último telegrama que se haya enviado.
-     * Si esto no sucede en "_msTimeOut" ms, entonces se lanza una excepción.
-     *
-     * @param _msTimeOut
-     */
-    public void waitUltimoTelegrama(long _msTimeOut){
-        try {
-            remoteArcadio.waitUltimoTelegrama(sessionId, sessionKey, _msTimeOut);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * ***Félix dice***: en mi opinión los usuarios no deberían tener control sobre estructuras
-     * tan internas. Hay que ofrecerles una abstracción más digerible y universal.
-     */
-        /*
-        public void cleanTlgs();
-
-        /**
-         * @return el número de nanosegundos transcurridos entre el envío y la recepción
-         * del último telegrama de ping.
-         */
-    public long getPingTime(){
-        long pingtime = 0;
-        try {
-            pingtime=remoteArcadio.getPingTime(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return pingtime;
-    }
-
-    /**
-     * Permite modificar el periodo de envío de los telegramas "ping", siempre que
-     * el watchdog esté habilitado (ver el método "setWatchdogEnabled()").
-     * Si el periodo es 0 (o negativo), equivale a deshabilitar el watchdog.
-     * @param _ms Valor en milisegundos.
-     */
-    public void setWatchdowgPeriod(int _ms){
-        try {
-            remoteArcadio.setWatchdowgPeriod(sessionId, sessionKey, _ms);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Permite habilitar/deshabilitar el watchdog. Este es un thread que envía periódicamente
-     * un telegrama "ping" para generar tráfico entre arcadio y la pasarela, evitando que sus
-     * sockets hagan timeout por falta de actividad.
-     * El periodo de envío de esos telegramas "ping" puede modificarse con el método
-     * "setWatchdgPeriod()", que por defecto es de 2 segundos.
-     *
-     * @param _enabled
-     */
-    public void setWatchdogEnabled (boolean _enabled){
-        try {
-            remoteArcadio.setWatchdogEnabled(sessionId, sessionKey, _enabled);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
-
-    /**
-     * Permite conocer el número de ms que deben transcurrir sin que el socket reciba
-     * nada, para que salte el timeout.
-     * @return the socketTimeout
-     */
-    public int getSocketTimeout(){
-        int socketTimeout = 0;
-        try {
-            socketTimeout = remoteArcadio.getSocketTimeout(sessionId, sessionKey);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-        return socketTimeout;
-    }
-
-    /**
-     * Permite modificar el número de ms que deben transcurrir para que salte el timeout
-     * del socket cuando no se haya recibido nada en ese tiempo.
-     * @param _socketTimeout the socketTimeout to set
-     */
-    public void setSocketTimeout(int _socketTimeout){
-        try {
-            remoteArcadio.setSocketTimeout(sessionId, sessionKey, _socketTimeout);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();;
-        }
-    }
-
     public boolean isConnected(){
-        boolean isConected = false;
         try {
-            isConected = remoteArcadio.isConnected(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.isConnected(sessionId, sessionKey);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return isConected;
+        return false;
     }
+    public void removeNameFromBag(String _bagName, String _name){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.removeNameFromBag(sessionId, sessionKey, _bagName, _name);
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
 
-    /**
-     * @return the reconexionActivada
-     */
-    public boolean isReconexionActivada(){
-        boolean isReconexionActivada = false;
+    }
+    public void setBagPeriod(String _bagName, int _ms){
         try {
-            isReconexionActivada = remoteArcadio.isReconexionActivada(sessionId, sessionKey);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.setBagPeriod(sessionId, sessionKey, _bagName, _ms);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-        return isReconexionActivada;
-    }
-    /**
-     * @param _reconexionActivada the reconexionActivada to set
-     */
-    public void setReconexionActivada(boolean _reconexionActivada){
-        try {
-            remoteArcadio.setReconexionActivada(sessionId, sessionKey, _reconexionActivada);
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-    }
 
-    public void setTipoNombre(String tipoNombre){
+    }
+    public void setPingPeriod(int _ms){
         try {
-            remoteArcadio.setTipoNombre(sessionId, sessionKey, tipoNombre);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.setPingPeriod(sessionId, sessionKey, _ms);
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
-    }
 
-    public void setConnection(String input, String output){
+    }
+    public void singleRead(VariablesList _vars){
         try {
-            remoteArcadio.setConnection(sessionId, sessionKey, input, output);
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.singleRead(sessionId, sessionKey, _vars);
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
+
+    }
+    public void waitForLastTelegram(int _msTimeout){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.waitForLastTelegram(sessionId, sessionKey, _msTimeout);
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
+
+    }
+    public void writeVariable1(String _name, double _value){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.writeVariable1(sessionId, sessionKey,_name, _value);
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
+
+    }
+    public void writeVariable2(String _name, String _value){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.writeVariable2(sessionId, sessionKey, _name, _value);
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
+
+    }
+    public void writeVariables3(VariablesList _names){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.writeVariables3(sessionId, sessionKey, _names);
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
+
+    }
+    //CosmeconnectorPlus
+    public NamesList getNamesList(){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                return remoteArcadio.getNamesList();
+            }
+        } catch (RemoteException e) {
+            onclientstartedlistener.onClientStopped();
+        }
+        return null;
+    }
+    public void requestNamesList(){
+        try {
+            if(remoteArcadio== null) {
+                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+            }else {
+                remoteArcadio.requestNamesList();
+            }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }

@@ -1,2 +1,2 @@
 package com.arcadio.common;
-parcelable NameList;
+parcelable NamesList;
