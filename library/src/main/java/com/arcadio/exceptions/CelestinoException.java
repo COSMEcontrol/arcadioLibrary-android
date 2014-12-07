@@ -17,7 +17,7 @@ public class CelestinoException extends Exception {
     
     private String mensaje;
     
-    /** Creates a new instance of EmcosException */
+    /** Creates a new instance of CelestinoException */
     public CelestinoException(String _msg) {
         this.mensaje = _msg;
     }

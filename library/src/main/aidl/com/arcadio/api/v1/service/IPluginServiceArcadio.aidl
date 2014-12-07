@@ -11,8 +11,8 @@ import com.arcadio.api.v1.service.ParceableCosmeStates;
 interface IPluginServiceArcadio {
 
      void addNameToBag(int sessionId, String sessionKey,String _bagName, String _name);
-     void blockingRead1(int sessionId, String sessionKey,String _name, int _timeout);
-     void blockingRead2(int sessionId, String sessionKey,String _name, int _timeout);
+     void addNamesToBag(int sessionId, String sessionKey,String _bagName, inout List<String> _names);
+     void blockingRead(int sessionId, String sessionKey,String _name, int _timeout);
      void blockingWrite(int sessionId, String sessionKey,String _name, double _value, int _timeout);
      void connect1(int id, ISessionStartedListener sessionListener, ICosmeListener _iCosmeListener);
      void connect2(ISessionStartedListener sessionListener, ICosmeListener _iCosmeListener, String _password, String _host, int _port);
@@ -35,8 +35,8 @@ interface IPluginServiceArcadio {
      void writeVariable2(int sessionId, String sessionKey,String _name, String _value);
      void writeVariables3(int sessionId, String sessionKey,inout VariablesList _names);
      //CosmeconnectorPlus
-     NamesList getNamesList();
-     void requestNamesList();
+     NamesList getNamesList(int sessionId, String sessionKey);
+     void requestNamesList(int sessionId, String sessionKey);
 
 
 

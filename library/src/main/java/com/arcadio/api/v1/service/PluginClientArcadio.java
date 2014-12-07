@@ -13,16 +13,17 @@ import com.arcadio.common.ItemVariable;
 import com.arcadio.common.NamesList;
 import com.arcadio.common.VariablesList;
 import com.arcadio.service.api.v1.listeners.OnClientStartedListener;
-
+import com.arcadio.api.v1.service.exceptions.NoConnectedArcadioException;
+import com.arcadio.api.v1.service.exceptions.ServiceDisconnectedArcadioException;
 import java.util.List;
-import java.util.Map;
+
 /**
  * Created by Alberto Azuara García on 05/12/14.
  */
 
 public class PluginClientArcadio {
 	
-	public static IPluginServiceArcadio remoteArcadio;
+	private static IPluginServiceArcadio remoteArcadio;
 	private OnClientStartedListener onclientstartedlistener;
     public static final String MINIBLAS_PACKAGE_NAME = "com.miniblas.app";
 	public static final String MINIBLAS_SERVICE_ARCADIO = "com.arcadio.api.v1.service.ConnectionArcadioService";
@@ -30,12 +31,19 @@ public class PluginClientArcadio {
 	private int sessionId = 0;
 	private String sessionKey = "";
 	private Context context;
+	private boolean isConnected = false;
 	
 	
 	public PluginClientArcadio(Context context){
 		this.context=context;
 	}
 
+	public boolean isConected(){
+		return this.isConnected;
+	}
+	public void setIsConnected(boolean isConnected){
+		this.isConnected = isConnected;
+	}
 	
 	private ServiceConnection conexion = new ServiceConnection() {
 		@Override
@@ -95,11 +103,13 @@ public class PluginClientArcadio {
                         throws RemoteException {
                     sessionId = _sessionId;
                     sessionKey = _sessionKey;
+					setIsConnected(true);
                     Log.v("PluginClientArcadioLibrary-->", "Client identifier received API");
                 }
 
                 @Override
                 public void onSessionError(String error) throws RemoteException {
+					setIsConnected(false);
                     Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
 
                 }
@@ -114,12 +124,19 @@ public class PluginClientArcadio {
      * que haya reconexión.
      */
 
-	public void disconnect(){
-
+	public void disconnect() throws NoConnectedArcadioException, ServiceDisconnectedArcadioException{
 		try {
-			if(remoteArcadio== null)
+			if(remoteArcadio== null){
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-			remoteArcadio.disconnect(sessionId, sessionKey);
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.disconnect(sessionId, sessionKey);
+					setIsConnected(false);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
 		} catch (RemoteException e) {
 			onclientstartedlistener.onClientStopped();	
 		}
@@ -147,293 +164,420 @@ public class PluginClientArcadio {
      * dedicada sólo a este propósito y ejecutada en un thread independiente
      * para no interferir con el resto de la aplicación.
      */
-    public void addNameToBag(String _bagName, String _name){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.addNameToBag(sessionId, sessionKey, _bagName, _name);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public void addNameToBag(String _bagName, String _name) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.addNameToBag(sessionId, sessionKey, _bagName, _name);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void blockingRead1(String _name, int _timeout){
+
+    public void addNamesToBag(String _bagName, List<String> _variablesList) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.addNamesToBag(sessionId, sessionKey, _bagName, _variablesList);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
+    }
+
+    public void blockingRead(String _name, int _timeout) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.blockingRead(sessionId, sessionKey, _name, _timeout);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
+    }
+    public void blockingWrite(String _name, double _value, int _timeout) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.blockingWrite(sessionId, sessionKey, _name, _value, _timeout);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
+    }
+
+    public void connect(ICosmeListener _iCosmeListener, String _password, String _host, int _port){
         try {
             if(remoteArcadio== null) {
                 Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
             }else {
-                remoteArcadio.blockingRead1(sessionId, sessionKey, _name, _timeout);
+                remoteArcadio.connect2(new ISessionStartedListener.Stub() {
+					@Override
+					public IBinder asBinder() {
+						return this;
+					}
+
+					@Override
+					public void onSessionStarted(int _sessionId, String _sessionKey)
+							throws RemoteException {
+						sessionId = _sessionId;
+						sessionKey = _sessionKey;
+						setIsConnected(true);
+						Log.v("PluginClientArcadioLibrary-->", "Client identifier received API");
+					}
+
+					@Override
+					public void onSessionError(String error) throws RemoteException {
+						setIsConnected(false);
+						Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
+
+					}
+				}, _iCosmeListener, _password, _host, _port);
+				setIsConnected(true);
             }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
         }
 
     }
-    public void blockingRead2(String _name, int _timeout){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.blockingRead2(sessionId, sessionKey, _name, _timeout);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void createBag(String _bagName) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.createBag(sessionId, sessionKey, _bagName);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void blockingWrite(String _name, double _value, int _timeout){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.blockingWrite(sessionId, sessionKey, _name, _value, _timeout);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void deleteBag(String _bagName) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.deleteBag(sessionId, sessionKey, _bagName);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-
-    public void connect2(ISessionStartedListener sessionListener, ICosmeListener _iCosmeListener, String _password, String _host, int _port){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.connect2(sessionListener, _iCosmeListener, _password, _host, _port);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
-    }
-    public void createBag(String _bagName){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.createBag(sessionId, sessionKey, _bagName);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
-    }
-    public void deleteBag(String _bagName){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.deleteBag(sessionId, sessionKey, _bagName);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
-    }
-    public int getBagPeriod(String _bagName){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.getBagPeriod(sessionId, sessionKey, _bagName);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public int getBagPeriod(String _bagName) throws NoConnectedArcadioException, ServiceDisconnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.getBagPeriod(sessionId, sessionKey, _bagName);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return 0;
     }
-    public List<String> getBags(){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.getBags(sessionId, sessionKey);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public List<String> getBags() throws NoConnectedArcadioException, ServiceDisconnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.getBags(sessionId, sessionKey);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return null;
     }
-    public long getPingLatencyMs(){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.getPingLatencyMs(sessionId, sessionKey);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public long getPingLatencyMs() throws NoConnectedArcadioException, ServiceDisconnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.getPingLatencyMs(sessionId, sessionKey);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return 0;
     }
-    public ItemVariable getVariable(String _name){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.getVariable(sessionId, sessionKey, _name);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public ItemVariable getVariable(String _name) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.getVariable(sessionId, sessionKey, _name);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return null;
     }
-    public List<ItemVariable> getVariables(List<String> _names){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.getVariables(sessionId, sessionKey, _names);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public List<ItemVariable> getVariables(List<String> _names) throws NoConnectedArcadioException, ServiceDisconnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.getVariables(sessionId, sessionKey, _names);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return null;
     }
-    public String getVersion(){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.getVersion(sessionId, sessionKey);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public String getVersion() throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.getVersion(sessionId, sessionKey);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return null;
     }
-    public boolean isConnected(){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.isConnected(sessionId, sessionKey);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public boolean isConnected() throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.isConnected(sessionId, sessionKey);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return false;
     }
-    public void removeNameFromBag(String _bagName, String _name){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.removeNameFromBag(sessionId, sessionKey, _bagName, _name);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public void removeNameFromBag(String _bagName, String _name) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.removeNameFromBag(sessionId, sessionKey, _bagName, _name);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
+    }
+    public void setBagPeriod(String _bagName, int _ms) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.setBagPeriod(sessionId, sessionKey, _bagName, _ms);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
 
     }
-    public void setBagPeriod(String _bagName, int _ms){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.setBagPeriod(sessionId, sessionKey, _bagName, _ms);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void setPingPeriod(int _ms) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.setPingPeriod(sessionId, sessionKey, _ms);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void setPingPeriod(int _ms){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.setPingPeriod(sessionId, sessionKey, _ms);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void singleRead(VariablesList _vars) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.singleRead(sessionId, sessionKey, _vars);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void singleRead(VariablesList _vars){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.singleRead(sessionId, sessionKey, _vars);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void waitForLastTelegram(int _msTimeout) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.waitForLastTelegram(sessionId, sessionKey, _msTimeout);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void waitForLastTelegram(int _msTimeout){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.waitForLastTelegram(sessionId, sessionKey, _msTimeout);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void writeVariable(String _name, double _value) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.writeVariable1(sessionId, sessionKey,_name, _value);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void writeVariable1(String _name, double _value){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.writeVariable1(sessionId, sessionKey,_name, _value);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void writeVariable(String _name, String _value) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.writeVariable2(sessionId, sessionKey, _name, _value);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
-    public void writeVariable2(String _name, String _value){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.writeVariable2(sessionId, sessionKey, _name, _value);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
-    }
-    public void writeVariables3(VariablesList _names){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.writeVariables3(sessionId, sessionKey, _names);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
+    public void writeVariables(VariablesList _names) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.writeVariables3(sessionId, sessionKey, _names);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
     //CosmeconnectorPlus
-    public NamesList getNamesList(){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                return remoteArcadio.getNamesList();
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public NamesList getNamesList() throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					return remoteArcadio.getNamesList(sessionId, sessionKey);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
         return null;
     }
-    public void requestNamesList(){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.requestNamesList();
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
+    public void requestNamesList() throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
+		try {
+			if(remoteArcadio== null){
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+				throw new ServiceDisconnectedArcadioException();
+			}else{
+				if(isConnected()){
+					remoteArcadio.requestNamesList(sessionId, sessionKey);
+				}else{
+					throw new NoConnectedArcadioException();
+				}
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
+		}
     }
 
 }
