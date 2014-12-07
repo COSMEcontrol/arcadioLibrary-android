@@ -202,7 +202,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.blockingRead(sessionId, sessionKey, _name, _timeout);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -218,7 +218,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.blockingWrite(sessionId, sessionKey, _name, _value, _timeout);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -269,7 +269,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.createBag(sessionId, sessionKey, _bagName);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -285,7 +285,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.deleteBag(sessionId, sessionKey, _bagName);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -301,7 +301,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.getBagPeriod(sessionId, sessionKey, _bagName);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -318,7 +318,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.getBags(sessionId, sessionKey);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -335,7 +335,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.getPingLatencyMs(sessionId, sessionKey);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -352,7 +352,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.getVariable(sessionId, sessionKey, _name);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -369,7 +369,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.getVariables(sessionId, sessionKey, _names);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -386,7 +386,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.getVersion(sessionId, sessionKey);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -403,7 +403,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.isConnected(sessionId, sessionKey);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -420,7 +420,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.removeNameFromBag(sessionId, sessionKey, _bagName, _name);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -436,7 +436,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.setBagPeriod(sessionId, sessionKey, _bagName, _ms);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -453,7 +453,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.setPingPeriod(sessionId, sessionKey, _ms);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -469,7 +469,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.singleRead(sessionId, sessionKey, _vars);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -485,7 +485,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.waitForLastTelegram(sessionId, sessionKey, _msTimeout);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -501,7 +501,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.writeVariable1(sessionId, sessionKey,_name, _value);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -517,7 +517,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.writeVariable2(sessionId, sessionKey, _name, _value);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -533,7 +533,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.writeVariables3(sessionId, sessionKey, _names);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -550,7 +550,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					return remoteArcadio.getNamesList(sessionId, sessionKey);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -567,7 +567,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.requestNamesList(sessionId, sessionKey);
 				}else{
 					throw new NoConnectedArcadioException();
