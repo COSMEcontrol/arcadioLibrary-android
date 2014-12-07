@@ -38,10 +38,8 @@ public class PluginClientArcadio {
 		this.context=context;
 	}
 
-	public boolean isConected(){
-		return this.isConnected;
-	}
-	public void setIsConnected(boolean isConnected){
+
+	public void isConnected(boolean isConnected){
 		this.isConnected = isConnected;
 	}
 	
@@ -103,13 +101,13 @@ public class PluginClientArcadio {
                         throws RemoteException {
                     sessionId = _sessionId;
                     sessionKey = _sessionKey;
-					setIsConnected(true);
+					isConnected(true);
                     Log.v("PluginClientArcadioLibrary-->", "Client identifier received API");
                 }
 
                 @Override
                 public void onSessionError(String error) throws RemoteException {
-					setIsConnected(false);
+					isConnected(false);
                     Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
 
                 }
@@ -130,9 +128,9 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.disconnect(sessionId, sessionKey);
-					setIsConnected(false);
+					isConnected(false);
 				}else{
 					throw new NoConnectedArcadioException();
 				}
@@ -170,7 +168,7 @@ public class PluginClientArcadio {
 				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
 				throw new ServiceDisconnectedArcadioException();
 			}else{
-				if(isConnected()){
+				if(isConnected){
 					remoteArcadio.addNameToBag(sessionId, sessionKey, _bagName, _name);
 				}else{
 					throw new NoConnectedArcadioException();
@@ -247,18 +245,18 @@ public class PluginClientArcadio {
 							throws RemoteException {
 						sessionId = _sessionId;
 						sessionKey = _sessionKey;
-						setIsConnected(true);
+						isConnected(true);
 						Log.v("PluginClientArcadioLibrary-->", "Client identifier received API");
 					}
 
 					@Override
 					public void onSessionError(String error) throws RemoteException {
-						setIsConnected(false);
+						isConnected(false);
 						Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
 
 					}
 				}, _iCosmeListener, _password, _host, _port);
-				setIsConnected(true);
+				isConnected(true);
             }
         } catch (RemoteException e) {
             onclientstartedlistener.onClientStopped();
