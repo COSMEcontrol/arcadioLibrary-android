@@ -4,8 +4,9 @@ package com.arcadio.common;
  * Created by Alberto Azuara García on 26/11/14.
  */
 import android.os.Parcel;
+import android.os.Parcelable;
 
-public class NumericVariable  extends ItemVariable{
+public class NumericVariable  extends ItemVariable implements Parcelable{
 
     /**  */
     private double valor = Double.NaN;
@@ -125,6 +126,7 @@ public class NumericVariable  extends ItemVariable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
+
         dest.writeDouble(valor);
         dest.writeDouble(lastValue);
         dest.writeDouble(initial_value);
@@ -133,10 +135,12 @@ public class NumericVariable  extends ItemVariable{
         dest.writeDouble(coefficient1);
         dest.writeDouble(coefficient2);
         dest.writeDouble(coefficient3);
+
     }
     @Override
     public NumericVariable readFromParcel(Parcel in) {
         super.readFromParcel(in);
+
         this.valor=in.readDouble();
         this.lastValue =in.readDouble();
         this.initial_value = in.readDouble();
@@ -145,6 +149,7 @@ public class NumericVariable  extends ItemVariable{
         this.coefficient1 = in.readDouble();
         this.coefficient2 = in.readDouble();
         this.coefficient3 = in.readDouble();
+
         return this;
     }
 

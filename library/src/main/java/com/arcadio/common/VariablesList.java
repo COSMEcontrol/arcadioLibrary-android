@@ -37,15 +37,33 @@ public class VariablesList implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeMap(vars);
+        dest.writeInt(vars.size());
+		for (String s: vars.keySet()) {
+			dest.writeString(s);
+			ItemVariable variable = vars.get(s);
+			dest.writeParcelable(variable,flags);
+		}
     }
     public VariablesList readFromParcel(Parcel in) {
-        in.readMap(vars, VariablesList.class.getClassLoader());
+		try{
+			int count = in.readInt();
+			for(int i = 0; i < count; i++){
+				String name = in.readString();
+				vars.put(name,(ItemVariable) in.readParcelable(ItemVariable.class.getClassLoader()));
+
+			}
+		}catch(Exception e){
+			//si hay algun tipo de problema con el parseo hay que capturar la excepcion, ya que al
+			//estar en un hilo aparte no se muestra por pantalla y se muere el hilo si se genera una.
+			System.out.println(e);
+		}
         return this;
     }
+
     public VariablesList(Parcel in) {
         readFromParcel(in);
     }
+
     public static final Parcelable.Creator<VariablesList> CREATOR
             = new Parcelable.Creator<VariablesList>() {
         public VariablesList createFromParcel(Parcel in) {
@@ -61,15 +79,15 @@ public class VariablesList implements Parcelable {
     /**
      * variable list, ItemVariable
      */
-    private HashMap<String, ItemVariable> vars;
+    private HashMap<String, ItemVariable> vars = new HashMap<String, ItemVariable>();
 
     /**
     *  
     * 
     */
     public VariablesList(){
-	vars = new HashMap();
-    }
+
+	}
 
     /**
     *  
@@ -87,7 +105,7 @@ public class VariablesList implements Parcelable {
     */
     public void add(String _name, double _value) {
         ItemVariable v = new NumericVariable(_name, _value);
-	    vars.put (_name, v);
+	    vars.put(_name, v);
     } 
     
     /**

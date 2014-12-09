@@ -161,13 +161,12 @@ public class ItemVariable implements Parcelable {
         booleanArray[1] = isValueNull;
         booleanArray[2] = isValueModified;
         dest.writeBooleanArray(booleanArray);
-
     }
     public ItemVariable readFromParcel(Parcel in) {
         this.unit = in.readString();
         this.timestamp = in.readLong();
         this.timestampModified = in.readLong();
-        boolean[] booleanArray = null;
+        boolean[] booleanArray = new boolean[3];
         in.readBooleanArray(booleanArray);
         this.modificable=booleanArray[0];
         this.isValueNull =booleanArray[1];

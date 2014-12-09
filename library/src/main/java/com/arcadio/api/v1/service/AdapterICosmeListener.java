@@ -19,7 +19,6 @@ public class AdapterICosmeListener extends ICosmeListener.Stub {
 	@Override
 	public void onDataReceived(String _nombreCesta, VariablesList _listaVariables) throws RemoteException {
 		cosmeListener.onDataReceived(_nombreCesta, _listaVariables);
-		
 	}
 
 	@Override

@@ -1,5 +1,4 @@
 package com.arcadio.api.v1.service;
-import java.util.List;
 import com.arcadio.api.v1.service.ParceableCosmeStates;
 import com.arcadio.common.VariablesList;
 
