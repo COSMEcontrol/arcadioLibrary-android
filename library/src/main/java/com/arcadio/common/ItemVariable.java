@@ -152,6 +152,8 @@ public class ItemVariable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(type);
         dest.writeString(unit);
         dest.writeLong(timestamp);
         dest.writeLong(timestampModified);
@@ -163,6 +165,8 @@ public class ItemVariable implements Parcelable {
         dest.writeBooleanArray(booleanArray);
     }
     public ItemVariable readFromParcel(Parcel in) {
+        this.name=in.readString();
+        this.type=in.readString();
         this.unit = in.readString();
         this.timestamp = in.readLong();
         this.timestampModified = in.readLong();
@@ -183,4 +187,5 @@ public class ItemVariable implements Parcelable {
             return new ItemVariable[size];
         }
     };
+
 }

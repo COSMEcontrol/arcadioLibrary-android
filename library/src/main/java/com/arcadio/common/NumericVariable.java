@@ -126,7 +126,6 @@ public class NumericVariable  extends ItemVariable implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
-
         dest.writeDouble(valor);
         dest.writeDouble(lastValue);
         dest.writeDouble(initial_value);
@@ -135,12 +134,10 @@ public class NumericVariable  extends ItemVariable implements Parcelable{
         dest.writeDouble(coefficient1);
         dest.writeDouble(coefficient2);
         dest.writeDouble(coefficient3);
-
     }
     @Override
     public NumericVariable readFromParcel(Parcel in) {
         super.readFromParcel(in);
-
         this.valor=in.readDouble();
         this.lastValue =in.readDouble();
         this.initial_value = in.readDouble();
@@ -149,7 +146,6 @@ public class NumericVariable  extends ItemVariable implements Parcelable{
         this.coefficient1 = in.readDouble();
         this.coefficient2 = in.readDouble();
         this.coefficient3 = in.readDouble();
-
         return this;
     }
 

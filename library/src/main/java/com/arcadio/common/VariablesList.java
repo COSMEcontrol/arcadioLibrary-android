@@ -18,6 +18,7 @@ package com.arcadio.common;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,8 +40,10 @@ public class VariablesList implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(vars.size());
 		for (String s: vars.keySet()) {
+            Log.v("LOgggg","Escribiendo: " + s);
 			dest.writeString(s);
 			ItemVariable variable = vars.get(s);
+            Log.v("LOgggg","Escribiendo: " + variable);
 			dest.writeParcelable(variable,flags);
 		}
     }
@@ -49,6 +52,7 @@ public class VariablesList implements Parcelable {
 			int count = in.readInt();
 			for(int i = 0; i < count; i++){
 				String name = in.readString();
+                Log.v("LOgggg","Recibiendo: " + name);
 				vars.put(name,(ItemVariable) in.readParcelable(ItemVariable.class.getClassLoader()));
 
 			}
