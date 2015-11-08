@@ -18,7 +18,8 @@ import com.arcadio.api.v1.service.exceptions.ServiceDisconnectedArcadioException
 import java.util.List;
 
 /**
- * Created by Alberto Azuara García on 05/12/14.
+ *
+ * @author A. Azuara  05/12/14
  */
 
 public class PluginClientArcadio {
@@ -114,6 +115,39 @@ public class PluginClientArcadio {
             }, new AdapterICosmeListener(cosmeListener));
 		} catch (RemoteException e) {
 			e.printStackTrace();
+		}
+
+	}
+	public void connect(CosmeListener cosmeListener, String _host, String _password, int _port){
+		try {
+			if(remoteArcadio== null) {
+				Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
+			}else {
+				remoteArcadio.connect2(new ISessionStartedListener.Stub() {
+					@Override
+					public IBinder asBinder() {
+						return this;
+					}
+
+					@Override
+					public void onSessionStarted(int _sessionId, String _sessionKey)
+							throws RemoteException {
+						sessionId = _sessionId;
+						sessionKey = _sessionKey;
+						Log.v("PluginClientArcadioLibrary-->", "Client identifier received API "+sessionId);
+						setServiceConnected(true);
+					}
+
+					@Override
+					public void onSessionError(String error) throws RemoteException {
+						setServiceConnected(false);
+						Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
+
+					}
+				}, new AdapterICosmeListener(cosmeListener), _password, _host, _port);
+			}
+		} catch (RemoteException e) {
+			onclientstartedlistener.onClientStopped();
 		}
 
 	}
@@ -229,40 +263,7 @@ public class PluginClientArcadio {
 		}
     }
 
-    public void connect(ICosmeListener _iCosmeListener, String _password, String _host, int _port){
-        try {
-            if(remoteArcadio== null) {
-                Log.v("PluginClientArcadioLibrary-->", "Not connected with Arcadio Service");
-            }else {
-                remoteArcadio.connect2(new ISessionStartedListener.Stub() {
-					@Override
-					public IBinder asBinder() {
-						return this;
-					}
 
-					@Override
-					public void onSessionStarted(int _sessionId, String _sessionKey)
-							throws RemoteException {
-						sessionId = _sessionId;
-						sessionKey = _sessionKey;
-						setServiceConnected(true);
-						Log.v("PluginClientArcadioLibrary-->", "Client identifier received API");
-					}
-
-					@Override
-					public void onSessionError(String error) throws RemoteException {
-						setServiceConnected(false);
-						Log.v("PluginClientArcadioLibrary-->", "Session Error: " + error);
-
-					}
-				}, _iCosmeListener, _password, _host, _port);
-				setServiceConnected(true);
-            }
-        } catch (RemoteException e) {
-            onclientstartedlistener.onClientStopped();
-        }
-
-    }
     public void createBag(String _bagName) throws ServiceDisconnectedArcadioException, NoConnectedArcadioException{
 		try {
 			if(remoteArcadio== null){

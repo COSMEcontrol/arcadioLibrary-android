@@ -27,7 +27,7 @@ import java.util.HashMap;
 /**
 *
 * @version 1.0
-* @author Alberto Azuara García
+* @author A.Azuara, fserna
 */
 public class VariablesList implements Parcelable {
 
@@ -40,27 +40,18 @@ public class VariablesList implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(vars.size());
 		for (String s: vars.keySet()) {
-            Log.v("LOgggg","Escribiendo: " + s);
 			dest.writeString(s);
 			ItemVariable variable = vars.get(s);
-            Log.v("LOgggg","Escribiendo: " + variable);
 			dest.writeParcelable(variable,flags);
 		}
     }
     public VariablesList readFromParcel(Parcel in) {
-		try{
-			int count = in.readInt();
-			for(int i = 0; i < count; i++){
-				String name = in.readString();
-                Log.v("LOgggg","Recibiendo: " + name);
-				vars.put(name,(ItemVariable) in.readParcelable(ItemVariable.class.getClassLoader()));
+        int count = in.readInt();
+        for(int i = 0; i < count; i++){
+            String name = in.readString();
+            vars.put(name,(ItemVariable) in.readParcelable(ItemVariable.class.getClassLoader()));
 
-			}
-		}catch(Exception e){
-			//si hay algun tipo de problema con el parseo hay que capturar la excepcion, ya que al
-			//estar en un hilo aparte no se muestra por pantalla y se muere el hilo si se genera una.
-			System.out.println(e);
-		}
+        }
         return this;
     }
 
@@ -98,7 +89,6 @@ public class VariablesList implements Parcelable {
     * 
     */
     public void add(String _name) {
-        //System.out.print(_name);
         ItemVariable v = new ItemVariable (_name);
 	    vars.put(_name, v);
     } 

@@ -4,7 +4,7 @@ package com.arcadio.common;
 
 public class Profile {
 	/**
-	 * @author Alberto Azuara García 02/12/2014
+	 * @author A. Azuara, fserna 02/12/2014
 	 *
 	 */
 

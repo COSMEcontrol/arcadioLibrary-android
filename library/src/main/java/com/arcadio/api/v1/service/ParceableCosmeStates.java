@@ -2,7 +2,10 @@ package com.arcadio.api.v1.service;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
+/**
+ *
+ * @author A. Azuara
+ */
 
 public class ParceableCosmeStates implements Parcelable{
 		

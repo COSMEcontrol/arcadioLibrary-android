@@ -15,7 +15,7 @@ import com.arcadio.common.VariablesList;
 
 /**
 *   Cosme Listener
-* @author Alberto Azuara García
+* @author A. Azuara, fserna
 */
 public interface CosmeListener{
     /*

@@ -8,7 +8,7 @@ import java.util.Random;
  * Esta clase contiene la información asociada a cada clase que el cliente haya solicitado crear a Arcadio.
  * Cuando haya que reestablecer la comunicación, podrá recrearse la cesta existente sin que el cliente
  * deba hacer absolutamente nada.
- * @author Alberto Azuara
+ * @author A. Azuara, fserna
  */
 public class Bag {
     public static final String BASKET_NAME_SEPARATOR = "-";

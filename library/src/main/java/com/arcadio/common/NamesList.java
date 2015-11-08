@@ -15,7 +15,7 @@ import java.util.*;
 * Class description goes here.
 *
 * @version 1.0 02/12/2014
-* @author Alberto Azuara
+* @author A. Azuara, fserna
 */
 public class NamesList implements Parcelable {
 

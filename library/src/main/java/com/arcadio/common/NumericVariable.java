@@ -1,7 +1,7 @@
 package com.arcadio.common;
 
 /**
- * Created by Alberto Azuara García on 26/11/14.
+ * Created by A. Azuara, fserna on 26/11/14.
  */
 import android.os.Parcel;
 import android.os.Parcelable;

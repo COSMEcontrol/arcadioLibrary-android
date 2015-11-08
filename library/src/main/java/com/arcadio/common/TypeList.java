@@ -14,7 +14,7 @@ import java.util.*;
 /**
 *
 * @version 1.0 02/12/2014
-* @author Javier Perojo, Alberto Azuara García
+* @author Javier Perojo, A. Azuara, fserna
 */
 public class TypeList implements Parcelable {
 

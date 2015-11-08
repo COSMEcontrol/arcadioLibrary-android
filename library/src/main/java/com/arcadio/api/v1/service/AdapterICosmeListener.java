@@ -5,6 +5,10 @@ import android.os.RemoteException;
 
 import com.arcadio.CosmeListener;
 import com.arcadio.common.VariablesList;
+/**
+ *
+ * @author A. Azuara
+ */
 
 public class AdapterICosmeListener extends ICosmeListener.Stub {
 	

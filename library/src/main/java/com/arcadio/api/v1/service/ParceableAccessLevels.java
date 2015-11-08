@@ -4,7 +4,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.arcadio.common.AccessLevels;
-
+/**
+ *
+ * @author A. Azuara
+ */
 
 public class ParceableAccessLevels implements Parcelable{
     

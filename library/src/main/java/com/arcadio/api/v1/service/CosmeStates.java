@@ -11,7 +11,7 @@ package com.arcadio.api.v1.service;
  
 /**
 *
-* @author fserna,
+* @author fserna
 */
 public enum CosmeStates {
 
